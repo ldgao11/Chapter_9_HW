@@ -1,0 +1,143 @@
+---
+title: "Chapter_9_HW"
+format: pdf
+editor: visual
+---
+
+## Homework: Chapter 9 Showing Results with Tables
+
+Due: April 4th, 2024
+
+1.  Produce One table using datsets from data() function in each of the following:
+
+```{r setup}
+
+data("ChickWeight")
+#View(ChickWeight)
+```
+
+### LaTeX
+
+```{=latex}
+
+\begin{tabular}{l | c c c}
+      \hline
+      Chick & Weight & Time & Diet \\
+      \hline \hline
+      1 & 42 & 0 & 1\\
+      2 & 40 & 0 & 1\\
+      3 & 43 & 0 & 1\\
+      4 & 42 & 0 & 1\\
+      \hline
+\end{tabular}
+```
+### HTML
+
+```{=html}
+<table>
+      <thead>
+            <tr>
+                  <td>Chick</td> <td>Weight</td> <td>Time</td> <td>Diet</td>
+            </tr>
+      </thead>
+      <tbody>
+            <tr>
+                  <td>1</td> <td>42</td> <td>0</td> <td>1</td>
+            </tr>
+            <tr>
+                  <td>2</td> <td>40</td> <td>0</td> <td>1</td>
+            </tr>
+            <tr>
+                  <td>3</td> <td>43</td> <td>0</td> <td>1</td>
+            </tr>
+            <tr>
+                  <td>4</td> <td>42</td> <td>0</td> <td>1</td>
+            </tr>
+      </tbody>
+</table>
+```
+### xtable
+
+```{r, echo=FALSE}
+
+# Fit simple linear regression model
+
+M1 <- lm(weight ~ Time, data = ChickWeight)
+
+# Return class
+
+class(M1)
+summary(M1)
+```
+
+```{r, results='asis', echo=FALSE}
+
+library(xtable)
+
+# Create LaTeX table from M1 and show the output markup
+
+table1 = xtable(M1,digits = 1)
+
+print.xtable(table1, type = "latex", caption.placement = "top")
+
+
+```
+
+### texreg
+
+```{r}
+
+M2 <- lm(weight ~ Time + Diet, data = ChickWeight)
+summary(M2)
+
+```
+
+```{r, results='asis', fig.cap= 't' }
+
+#install.packages("texreg")
+library(texreg)
+
+# Create nested regression model table
+
+texreg(list(M1, M2))
+
+```
+
+### Kable
+
+```{r}
+
+library(knitr)
+
+
+kable_ex <- data.frame(
+  Chick = c("1", "2", "3", "4"),
+  Weight = c(42, 40, 43, 42),
+  Time = c(0, 0, 0, 0),
+  Diet = c("1", "1", "1", "1")
+)
+
+# Print kable with custom options
+kable(
+  kable_ex,
+  caption = "ChickWeight kable Table",
+  digits = 1,        # Number of digits after the decimal point
+  col.names = c("Chick", "Weight", "Time", "Diet"),  # Custom column names
+  row.names = FALSE  # Remove row names
+)
+```
+
+### stargazer
+
+```{r}
+library(stargazer)
+
+# Print table using stargazer
+
+stargazer(M2, type = "text")
+
+```
+
+Submit: Quarto document, PDF, .README, and push all to GitHub.
+
+<https://github.com/ldgao11/Chapter_9_HW.git>
